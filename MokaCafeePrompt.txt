@@ -1,0 +1,150 @@
+Regenerate a clean, simple, visually elegant café website with basic admin features, suitable for a small budget project. Create it exactly according to the specifications below.
+________________________________________
+📁 FILES & STRUCTURE (must match exactly)
+app/
+├── __init__.py
+├── models.py
+├── routes.py
+├── forms.py
+├── config.py
+static/
+├── css/
+│   ├── style.css
+│   └── responsive.css
+├── js/
+│   ├── main.js
+│   └── admin.js
+├── images/
+│   ├── logo.png
+│   └── products/
+templates/
+├── base.html
+├── index.html
+├── menu.html
+├── order.html
+├── admin/
+│   ├── dashboard.html
+│   └── manage_items.html
+├── includes/
+│   ├── header.html
+│   └── footer.html
+requirements.txt
+run.py
+________________________________________
+🧰 TECH STACK
+•	Python 3.11
+•	Flask 2.3+
+•	SQLite (local DB)
+•	SQLAlchemy ORM
+•	Bootstrap 5.3 (CDN)
+•	Vanilla JavaScript
+•	Flask-WTF (forms + CSRF)
+•	Flask-Login (admin authentication)
+________________________________________
+🎨 STYLE REQUIREMENTS
+•	Color palette:
+o	Primary: #6F4E37 (Coffee Brown)
+o	Secondary: #C19A6B (Creamy Latte)
+o	Accent: #F4E3C1 (Light Coffee)
+•	Font: Poppins (via Google Fonts)
+•	Logo: Text-based logo “CaféLuxe ☕” in elegant style (saved as logo.png)
+•	Smooth responsive layout for mobile devices
+•	Clean minimalistic café theme with warm colors
+________________________________________
+📌 FUNCTIONAL REQUIREMENTS (SCOPE FITS 500 EGP)
+This is a lightweight management system. Keep features simple, minimal, and functional.
+________________________________________
+1) PUBLIC FEATURES
+Home Page /
+•	Hero section with logo + tagline
+•	Display 4 featured menu items (hardcoded or query filtered)
+Menu Page /menu
+•	Display all menu items
+•	Filter by category (Coffee – Tea – Dessert)
+•	Simple “Add to order” button (session-based)
+Order Page /order
+•	Customer order form: name, phone, notes
+•	Session cart summary
+•	Save order to DB
+•	Show simple success message
+________________________________________
+2) ADMIN FEATURES
+Admin area kept simple and suitable for project budget.
+Admin Login /admin/login
+•	Login using username + password
+•	Protected using Flask-Login
+Dashboard /admin/dashboard
+•	Show simple statistics:
+o	Total products
+o	Total orders
+o	Pending orders
+o	Last 5 recent orders
+Manage Items /admin/manage
+Admin can:
+•	Add new menu item
+•	Edit menu item
+•	Delete item
+•	Upload image (saved in static/images/products/)
+Fields:
+•	name
+•	description
+•	price
+•	category
+•	image_url / upload
+•	is_available
+________________________________________
+🗄 DATABASE MODELS
+MenuItem
+id, name, description, price, category, image_url, is_available
+CustomerOrder
+id, customer_name, phone, items_json, total_amount, status, created_at
+AdminUser
+id, username, password_hash
+(password must use Werkzeug hashing)
+________________________________________
+📝 FORMS
+•	OrderForm
+•	AdminLoginForm
+•	MenuItemForm
+All forms use WTForms + validation.
+________________________________________
+🖥️ TEMPLATES
+base.html
+•	Navbar + Logo + Footer
+•	Bootstrap linked
+•	Blocks for content
+index.html
+•	Hero section
+•	4 featured items
+•	CTA buttons
+menu.html
+•	Categories filter
+•	Card-based products grid
+order.html
+•	Customer form
+•	Cart summary
+admin/dashboard.html
+•	Simple stats widgets
+admin/manage_items.html
+•	Add/Edit/Delete items forms
+________________________________________
+📦 DELIVERABLES
+•	Full working Flask app
+•	Clean code with comments
+•	Responsive UI
+•	Logo included
+•	Ready-to-run using:
+•	python run.py
+________________________________________
+🔐 LIMITATIONS (IMPORTANT – to match 500 EGP scope)
+❌ No advanced analytics
+❌ No full cart system with quantities
+❌ No sorting/searching
+❌ No complex design
+❌ No email notifications
+❌ No REST API endpoints
+❌ No user registration system
+Only the essential features needed for a lightweight café system.
+________________________________________
+🚀 Generate complete production-ready code for all files now.
+________________________________________
