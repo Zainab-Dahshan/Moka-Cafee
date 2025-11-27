@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Admin, MenuItem
+from app.models import Admin, MenuItem, CustomerOrder
 import os
 
 def create_admin():
@@ -14,7 +14,7 @@ def create_admin():
         print("Admin user created!")
 
 def create_sample_data():
-    # Add some sample menu items if none exist
+    # Add sample menu items if none exist
     if MenuItem.query.count() == 0:
         sample_items = [
             MenuItem(
@@ -35,7 +35,7 @@ def create_sample_data():
             ),
             MenuItem(
                 name='Green Tea',
-                description='Light and refreshing green tea leaves.',
+                description='Light and refreshing green tea.',
                 price=20.0,
                 category='Tea',
                 image_url=None,
@@ -43,7 +43,7 @@ def create_sample_data():
             ),
             MenuItem(
                 name='Chocolate Cake',
-                description='Rich and moist chocolate cake with chocolate frosting.',
+                description='Rich chocolate cake.',
                 price=35.0,
                 category='Dessert',
                 image_url=None,
@@ -71,9 +71,9 @@ if __name__ == '__main__':
         db.create_all()
         create_admin()
         create_sample_data()
-    
-    # Create necessary directories if they don't exist
+
+    # Ensure necessary directories exist
     os.makedirs(os.path.join(app.root_path, 'static/images/products'), exist_ok=True)
-    
-    # Run the application
+
+    # Run the app
     app.run(host='0.0.0.0', port=8000, debug=False)
