@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو موكا كافيه</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>منيو موكا كافيه</h1>
+        <nav>
+            <a href="index.html">الرئيسية</a>
+            <a href="orders.html">الأوردرز</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="menu-items">
+            <div class="item">
+                <img src="static/images/coffee1.jpg" alt="قهوة">
+                <h3>قهوة أمريكانو</h3>
+                <p>50 جنيه</p>
+                <button onclick="addToOrder('قهوة أمريكانو', 50)">أضف للأوردر</button>
+            </div>
+            <div class="item">
+                <img src="static/images/coffee2.jpg" alt="قهوة">
+                <h3>لاتيه</h3>
+                <p>60 جنيه</p>
+                <button onclick="addToOrder('لاتيه', 60)">أضف للأوردر</button>
+            </div>
+            <!-- أضف المزيد من الأصناف بنفس الطريقة -->
+        </section>
+    </main>
+
+    <script src="static/js/main.js"></script>
+</body>
+</html>
