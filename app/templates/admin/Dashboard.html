@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2>Welcome, Admin!</h2>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h4>Total Orders</h4>
+                <p>{{ total_orders }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h4>Menu Items</h4>
+                <p>{{ total_items }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

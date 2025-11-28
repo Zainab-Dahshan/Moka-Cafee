@@ -151,3 +151,12 @@ body {
 .fade-in {
     animation: fadeIn 0.8s ease-out forwards;
 }
+
+/* Basic admin panel styling */
+body {
+    background-color: #f8f9fa;
+}
+.table th, .table td {
+    vertical-align: middle;
+}
+
