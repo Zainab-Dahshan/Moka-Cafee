@@ -13,6 +13,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -46,5 +47,6 @@
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block extra_js %}{% endblock %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

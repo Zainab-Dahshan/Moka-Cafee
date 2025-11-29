@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-
 <section class="contact">
-    <div class="container">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo"><div class="container">
         <h2>تواصل معنا</h2>
 
         <form action="/send_message" method="POST">

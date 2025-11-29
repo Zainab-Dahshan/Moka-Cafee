@@ -5,6 +5,9 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section py-5 text-center text-white">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
@@ -19,6 +22,8 @@
         </div>
     </div>
 </section>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 
 <!-- Featured Menu Items -->
 <section class="py-5">

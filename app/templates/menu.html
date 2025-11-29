@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منيو موكا كافيه</title>
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
+    <img src="{{ url_for('static', filename='images/coffee1.jpg') }}" alt="Coffee 1">
+    <img src="{{ url_for('static', filename='images/coffee2.jpg') }}" alt="Coffee 2">
+
 </head>
 <body>
     <header>
@@ -34,5 +39,6 @@
     </main>
 
     <script src="static/js/main.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
