@@ -1,36 +1,236 @@
 {% extends "base.html" %}
 
-{% block title %}Orders{% endblock %}
+{% block title %}{% if current_user.is_authenticated %}Orders Management - Moka Cafe{% else %}Place Your Order - Moka Cafe{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-hero {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                    url('https://images.unsplash.com/photo-1559054663-459c5d9c92fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') center/cover;
+    }
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
-<div class="container py-5">
-    <h2>Customer Orders</h2>
-    <table class="table table-striped mt-4">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Phone</th>
-                <th>Items</th>
-                <th>Total</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.customer_name }}</td>
-                <td>{{ order.phone }}</td>
-                <td>{{ order.items }}</td>
-                <td>EGP {{ "%.2f"|format(order.total_amount) }}</td>
-                <td>{{ order.status }}</td>
-            </tr>
+{% if current_user.is_authenticated %}
+<!-- Admin Orders View -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Customer Orders</h2>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        {% if orders %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Phone</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.phone }}</td>
+                        <td>
+                            {% for item_id, item in order.parsed_items.items() %}
+                                {{ item.name }} ({{ item.quantity }})<br>
+                            {% endfor %}
+                        </td>
+                        <td>EGP {{ "%.2f"|format(order.total_amount) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if order.status == 'completed' else 'warning' if order.status == 'pending' else 'secondary' }}">
+                                {{ order.status.title() }}
+                            </span>
+                        </td>
+                        <td>{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}" class="d-inline">
+                                <select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()" aria-label="Update order status">
+                                    <option value="pending" {{ 'selected' if order.status == 'pending' }}>Pending</option>
+                                    <option value="processing" {{ 'selected' if order.status == 'processing' }}>Processing</option>
+                                    <option value="completed" {{ 'selected' if order.status == 'completed' }}>Completed</option>
+                                    <option value="cancelled" {{ 'selected' if order.status == 'cancelled' }}>Cancelled</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No orders found</h3>
+            <p class="text-muted">Orders will appear here once customers place them.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% else %}
+<!-- Client Order View -->
+<!-- Hero Section with Order Image -->
+<section class="hero-section py-5 text-center text-white order-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">Place Your Order</h1>
+                <p class="lead mb-5">Fresh coffee and delicious treats delivered to your doorstep</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Order Form and Cart -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Order Form -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Order Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" id="order-form">
+                            {{ form.hidden_tag() }}
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Your Name</label>
+                                    {{ form.name(class="form-control") }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small">
+                                            {% for error in form.name.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    {{ form.phone(class="form-control") }}
+                                    {% if form.phone.errors %}
+                                        <div class="text-danger small">
+                                            {% for error in form.phone.errors %}{{ error }}{% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12">
+                                    <label for="notes" class="form-label">Special Instructions (Optional)</label>
+                                    {{ form.notes(class="form-control", rows="3") }}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Your Order</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if cart %}
+                            <div id="cart-items">
+                                {% for item_id, item in cart.items() %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <strong>{{ item.name }}</strong>
+                                        <br>
+                                        <small class="text-muted">EGP {{ item.price }} × {{ item.quantity }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <strong>EGP {{ "%.2f"|format(item.price|float * item.quantity) }}</strong>
+                                        <br>
+                                        <button class="btn btn-sm btn-outline-danger ms-2 remove-item" data-id="{{ item_id }}" title="Remove item from cart" aria-label="Remove {{ item.name }}">
+                                            <i class="fas fa-times" aria-hidden="true"></i>
+                                            <span class="visually-hidden">Remove {{ item.name }}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total:</strong>
+                                {% set total = 0 %}
+                                {% for item in cart.values() %}
+                                    {% set total = total + (item.price|float * item.quantity) %}
+                                {% endfor %}
+                                <strong>EGP {{ "%.2f"|format(total) }}</strong>
+                            </div>
+                            <button type="submit" form="order-form" class="btn btn-primary w-100 mt-3">Place Order</button>
+                        {% else %}
+                            <p class="text-muted text-center mb-0">Your cart is empty</p>
+                            <a href="{{ url_for('main.menu') }}" class="btn btn-outline-primary w-100 mt-3">Browse Menu</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             {% endfor %}
-        </tbody>
-    </table>
-</div>
+        </div>
+    {% endif %}
+{% endwith %}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if not current_user.is_authenticated %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Remove item from cart
+    document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-id');
+            fetch('/update_cart/' + itemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'quantity=0'
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload(); // Refresh to update cart
+            });
+        });
+    });
+});
+</script>
+{% endif %}
 {% endblock %}

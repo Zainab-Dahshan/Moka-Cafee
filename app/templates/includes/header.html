@@ -1,12 +1,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
+
 <header class="site-header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CaféLuxe" class="img-fluid mb-4 logo-img">
-                <span class="ms-2">CaféLuxe <i class="fas fa-coffee"></i></span>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo" class="navbar-logo">
+                <span class="ms-2">MokaCafe <i class="fas fa-coffee"></i></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

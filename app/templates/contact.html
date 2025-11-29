@@ -1,30 +1,25 @@
 {% extends "base.html" %}
+
 {% block content %}
 <section class="contact">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo"><div class="container">
+    <div class="container">
         <h2>تواصل معنا</h2>
-
         <form action="/send_message" method="POST">
             <div class="input-group">
                 <label for="name">الاسم</label>
                 <input type="text" id="name" name="name" required aria-required="true" placeholder="أدخل اسمك">
             </div>
-
             <div class="input-group">
                 <label for="email">البريد الإلكتروني</label>
                 <input type="email" id="email" name="email" required aria-required="true" placeholder="أدخل بريدك الإلكتروني">
             </div>
-
             <div class="input-group">
                 <label for="message">الرسالة</label>
                 <textarea id="message" name="message" required aria-required="true" placeholder="اكتب رسالتك هنا"></textarea>
             </div>
-
             <button type="submit" class="btn-main">إرسال</button>
         </form>
     </div>
 </section>
-
 {% endblock %}
+

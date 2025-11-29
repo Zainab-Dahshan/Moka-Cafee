@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome to CaféLuxe ☕{% endblock %}
+{% block title %}Welcome to Moka Cafe ☕{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-section py-5 text-center text-white">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="CaféLuxe" class="img-fluid mb-4 logo-img">
-                <h1 class="display-4 fw-bold mb-4">Welcome to CaféLuxe</h1>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Moka Cafe Logo" class="img-fluid mb-4 logo-img">
+                <h1 class="display-4 fw-bold mb-4">Welcome to Moka Cafe</h1>
                 <p class="lead mb-5">Experience the perfect blend of taste and comfort with our handcrafted coffee and delicious treats.</p>
                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
                     <a href="{{ url_for('main.menu') }}" class="btn btn-light btn-lg px-4 me-sm-3">View Menu</a>
@@ -22,8 +19,6 @@
         </div>
     </div>
 </section>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 
 <!-- Featured Menu Items -->
 <section class="py-5">
@@ -77,7 +72,7 @@
             <div class="col-lg-6">
                 <h2 class="section-title">Our Story</h2>
                 <p class="lead">A passion for perfection in every cup.</p>
-                <p>Founded in 2023, CaféLuxe has been serving the finest coffee and desserts to our valued customers. We source our beans from sustainable farms and roast them to perfection to bring out their unique flavors.</p>
+                <p>Founded in 2025, Moka Cafe has been serving the finest coffee and desserts to our valued customers. We source our beans from sustainable farms and roast them to perfection to bring out their unique flavors.</p>
                 <p>Our cozy atmosphere and friendly staff make us the perfect spot for your morning coffee, business meetings, or relaxing afternoons with friends.</p>
                 <a href="#" class="btn btn-primary mt-3">Learn More</a>
             </div>
@@ -102,7 +97,7 @@
                         <p class="card-text">"The best coffee in town! I come here every morning before work. The atmosphere is amazing and the staff is super friendly."</p>
                         <div class="mt-4">
                             <img src="https://randomuser.me/api/portraits/women/32.jpg" class="rounded-circle mb-2" width="60" alt="Customer">
-                            <h6 class="mb-0">Sarah Johnson</h6>
+                            <h6 class="mb-0">Sarah Ahmad</h6>
                             <small class="text-muted">Regular Customer</small>
                         </div>
                     </div>
@@ -117,7 +112,7 @@
                         <p class="card-text">"I love their cappuccino and the chocolate cake is to die for! Perfect place to relax and enjoy some quality time."</p>
                         <div class="mt-4">
                             <img src="https://randomuser.me/api/portraits/men/45.jpg" class="rounded-circle mb-2" width="60" alt="Customer">
-                            <h6 class="mb-0">Michael Brown</h6>
+                            <h6 class="mb-0">Mohammad Helmi</h6>
                             <small class="text-muted">Coffee Enthusiast</small>
                         </div>
                     </div>
@@ -132,7 +127,7 @@
                         <p class="card-text">"Great place to work remotely. Fast WiFi, delicious coffee, and a quiet atmosphere. Highly recommended!"</p>
                         <div class="mt-4">
                             <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle mb-2" width="60" alt="Customer">
-                            <h6 class="mb-0">Emily Davis</h6>
+                            <h6 class="mb-0">Emily Mark</h6>
                             <small class="text-muted">Digital Nomad</small>
                         </div>
                     </div>
@@ -183,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert('There was an error adding the item to your cart. Please try again.');
             });
         });
     });

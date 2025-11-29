@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, session, current_app
 from flask_login import login_required, current_user, login_user, logout_user
 from . import db
-from .models import MenuItem, CustomerOrder, Admin
+from .models import MenuItem, CustomerOrder, Admin, ContactMessage
 from .forms import LoginForm, MenuItemForm, OrderForm
 import json
 from datetime import datetime
@@ -84,18 +84,36 @@ def add_to_cart(item_id):
 def update_cart(item_id):
     cart = session.get('cart', {})
     quantity = int(request.form.get('quantity', 1))
-    
+
     if str(item_id) in cart:
         if quantity <= 0:
             cart.pop(str(item_id))
         else:
             cart[str(item_id)]['quantity'] = quantity
-    
+
     session['cart'] = cart
     return jsonify({
         'success': True,
         'cart_count': sum(item['quantity'] for item in cart.values())
     })
+
+# Contact routes
+@main.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@main.route('/send_message', methods=['POST'])
+def send_message():
+    name = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+
+    contact_msg = ContactMessage(name=name, email=email, message=message)
+    db.session.add(contact_msg)
+    db.session.commit()
+
+    flash('Your message has been sent successfully!', 'success')
+    return redirect(url_for('main.contact'))
 
 # Admin routes
 @admin.route('/login', methods=['GET', 'POST'])
@@ -129,7 +147,7 @@ def dashboard():
         'pending_orders': CustomerOrder.query.filter_by(status='pending').count(),
         'recent_orders': CustomerOrder.query.order_by(CustomerOrder.created_at.desc()).limit(5).all()
     }
-    return render_template('admin/dashboard.html', stats=stats)
+    return render_template('admin/Dashboard.html', stats=stats)
 
 @admin.route('/manage', methods=['GET', 'POST'])
 @login_required
@@ -201,15 +219,38 @@ def edit_item(item_id):
 @login_required
 def delete_item(item_id):
     item = MenuItem.query.get_or_404(item_id)
-    
+
     # Delete associated image if exists
     if item.image_url:
         image_path = os.path.join(current_app.root_path, 'static', item.image_url)
         if os.path.exists(image_path):
             os.remove(image_path)
-    
+
     db.session.delete(item)
     db.session.commit()
-    
+
     flash('Menu item deleted successfully!', 'success')
     return redirect(url_for('admin.manage_items'))
+
+@admin.route('/orders')
+@login_required
+def orders():
+    orders = CustomerOrder.query.order_by(CustomerOrder.created_at.desc()).all()
+    for order in orders:
+        order.parsed_items = json.loads(order.items_json)
+    return render_template('order.html', orders=orders)
+
+@admin.route('/update_order_status/<int:order_id>', methods=['POST'])
+@login_required
+def update_order_status(order_id):
+    order = CustomerOrder.query.get_or_404(order_id)
+    new_status = request.form.get('status')
+
+    if new_status in ['pending', 'processing', 'completed', 'cancelled']:
+        order.status = new_status
+        db.session.commit()
+        flash(f'Order #{order_id} status updated to {new_status.title()}', 'success')
+    else:
+        flash('Invalid status', 'danger')
+
+    return redirect(url_for('admin.orders'))
