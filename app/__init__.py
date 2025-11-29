@@ -12,7 +12,7 @@ def create_app():
     # Configuration
     app.config['SECRET_KEY'] = 'your-secret-key-here'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cafe.db'
-    app.config['UPLOAD_FOLDER'] = 'static/images/products'
+    app.config['UPLOAD_FOLDER'] = 'static/images'
     
     # Initialize extensions
     db.init_app(app)
