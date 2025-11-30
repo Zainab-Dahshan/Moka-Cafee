@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderOrder();
 });
 
-
 // =============================
 // CART SYSTEM (Front-end only)
 // =============================
