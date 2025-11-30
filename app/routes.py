@@ -145,8 +145,10 @@ def dashboard():
         'total_products': MenuItem.query.count(),
         'total_orders': CustomerOrder.query.count(),
         'pending_orders': CustomerOrder.query.filter_by(status='pending').count(),
-        'recent_orders': CustomerOrder.query.order_by(CustomerOrder.created_at.desc()).limit(5).all()
+        'all_orders': CustomerOrder.query.order_by(CustomerOrder.created_at.desc()).all()
     }
+    for order in stats['all_orders']:
+        order.parsed_items = json.loads(order.items_json)
     return render_template('admin/Dashboard.html', stats=stats)
 
 @admin.route('/manage', methods=['GET', 'POST'])
