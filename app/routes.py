@@ -179,7 +179,7 @@ def manage_items():
         return redirect(url_for('admin.manage_items'))
     
     items = MenuItem.query.all()
-    return render_template('admin/manage_items.html', form=form, items=items)
+    return render_template('admin/manage_menu.html', form=form, items=items)
 
 @admin.route('/edit_item/<int:item_id>', methods=['GET', 'POST'])
 @login_required
@@ -238,7 +238,7 @@ def orders():
     orders = CustomerOrder.query.order_by(CustomerOrder.created_at.desc()).all()
     for order in orders:
         order.parsed_items = json.loads(order.items_json)
-    return render_template('order.html', orders=orders)
+    return render_template('admin/orders.html', orders=orders)
 
 @admin.route('/update_order_status/<int:order_id>', methods=['POST'])
 @login_required
