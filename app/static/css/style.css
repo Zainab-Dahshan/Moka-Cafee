@@ -1,3 +1,5 @@
+/* Main Styles for CaféLuxe */
+
 /* ==============================
       Global Variables
 ============================== */
@@ -9,16 +11,21 @@
     --dark-color: #333333;
     --gray-light: #f8f9fa;
     --font-primary: 'Poppins', sans-serif;
+    --font-size-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+    --font-size-h1: clamp(2rem, 1.6rem + 2vw, 3rem);
+    --font-size-h2: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
+    --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2rem);
 }
 
 /* ==============================
-      Global
+      Global Styles
 ============================== */
 body {
     font-family: var(--font-primary), Arial, sans-serif;
     color: var(--dark-color);
     line-height: 1.6;
     background-color: var(--gray-light);
+    font-size: var(--font-size-base);
 }
 
 /* ==============================
@@ -31,18 +38,15 @@ body {
     overflow: hidden;
 }
 
-.hero-section .logo {
+.hero-section .logo,
+.hero-section .logo-img {
     max-height: 120px;
+    max-width: 120px;
     transition: transform 0.3s ease;
 }
 
 .hero-section .logo:hover {
     transform: scale(1.05);
-}
-
-/* Extra hero image */
-.hero-section .logo-img {
-    max-width: 120px;
 }
 
 /* ==============================
@@ -59,12 +63,9 @@ body {
       Menu Hero
 ============================== */
 .menu-hero {
-    background: linear-gradient(
-        rgba(0,0,0,0.5), 
-        rgba(0,0,0,0.5)
-    ), 
-    url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')
-    center/cover;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')
+        center/cover;
 }
 
 /* ==============================
@@ -77,6 +78,10 @@ body {
     height: 100%;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 1 / 1.2;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .menu-item-card:hover {
@@ -92,6 +97,16 @@ body {
     justify-content: center;
     color: var(--secondary-color);
     font-size: 3rem;
+}
+
+/* Fallback for browsers without aspect-ratio */
+@supports not (aspect-ratio: 1 / 1.2) {
+  .menu-item-card::before {
+    content: "";
+    display: block;
+    padding-bottom: 120%;
+    float: left;
+  }
 }
 
 /* ==============================
@@ -122,6 +137,9 @@ body {
     border-color: var(--primary-color);
     padding: 0.5rem 1.5rem;
     transition: all 0.3s ease;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .btn-primary:hover,
@@ -152,6 +170,9 @@ body {
     transition: transform 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     height: 100%;
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    transform: translateZ(0);
 }
 
 .testimonial-card:hover {
@@ -188,18 +209,6 @@ body {
 }
 
 /* ==============================
-      Animations
-============================== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeIn 0.8s ease-out forwards;
-}
-
-/* ==============================
       Logo Global
 ============================== */
 .logo {
@@ -212,20 +221,32 @@ body {
     opacity: 0.8;
 }
 
-/* ==============================
-      Performance Optimizations
-============================== */
-html {
-  scroll-behavior: smooth;
+.logo-img {
+    max-width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 /* ==============================
-      Reduced Motion
+      Animations
 ============================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* ==============================
+      Performance & Accessibility
+============================== */
+html { scroll-behavior: smooth; }
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -233,9 +254,6 @@ html {
   }
 }
 
-/* ==============================
-      Focus States
-============================== */
 a:focus-visible,
 button:focus-visible,
 [tabindex="0"]:focus-visible {
@@ -244,67 +262,25 @@ button:focus-visible,
 }
 
 /* ==============================
-      Optimize Animations
-============================== */
-.menu-item-card,
-.testimonial-card,
-.btn-primary,
-.btn-outline-primary {
-  will-change: transform, box-shadow;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
-
-/* ==============================
       Responsive Typography
 ============================== */
-:root {
-  --font-size-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --font-size-h1: clamp(2rem, 1.6rem + 2vw, 3rem);
-  --font-size-h2: clamp(1.75rem, 1.5rem + 1.25vw, 2.5rem);
-  --font-size-h3: clamp(1.5rem, 1.3rem + 1vw, 2rem);
-}
-
-body {
-  font-size: var(--font-size-base);
-}
-
 h1 { font-size: var(--font-size-h1); }
 h2 { font-size: var(--font-size-h2); }
 h3 { font-size: var(--font-size-h3); }
 
 /* ==============================
-      Aspect Ratio for Cards
-============================== */
-.menu-item-card {
-  aspect-ratio: 1 / 1.2;
-}
-
-@supports not (aspect-ratio: 1 / 1.2) {
-  .menu-item-card::before {
-    content: "";
-    display: block;
-    padding-bottom: 120%;
-    float: left;
-  }
-}
-
-/* ==============================
       Print Styles
 ============================== */
 @media print {
-  .no-print {
-    display: none !important;
-  }
-  
+  .no-print { display: none !important; }
+
   body {
     font-size: 12pt;
     line-height: 1.3;
     color: #000;
     background: #fff;
   }
-  
-  .site-footer {
-    display: none;
-  }
+
+  .site-footer { display: none; }
 }
+
