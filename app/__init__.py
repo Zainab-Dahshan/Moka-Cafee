@@ -7,27 +7,27 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 def create_app():
-    static_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'static'))
+    static_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
     app = Flask(__name__, static_folder=static_path)
 
     # Configuration
     app.config['SECRET_KEY'] = 'your-secret-key-here'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     app.config['UPLOAD_FOLDER'] = 'static/images'
-    
+
     # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'admin.login'
-    
+
     # Ensure upload folder exists
     os.makedirs(os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), exist_ok=True)
-    
+
     # Register blueprints
     from .routes import main, admin
     app.register_blueprint(main)
     app.register_blueprint(admin, url_prefix='/admin')
-    
+
     # Create database tables and sample data
     with app.app_context():
         db.create_all()

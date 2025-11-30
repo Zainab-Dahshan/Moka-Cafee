@@ -1,8 +1,8 @@
-# CaféLuxe - Modern Coffee Shop Website
+# Moka Cafe - Modern Coffee Shop Website
 
-A responsive and modern web application for CaféLuxe, a coffee shop, built with Flask and Bootstrap 5.
+A comprehensive web application for Moka Cafe, a modern coffee shop that offers an exceptional online ordering experience. Built with Flask and Bootstrap 5, this platform enables customers to browse menus, place orders, and enjoy a seamless digital experience while allowing cafe management to efficiently handle operations.
 
-![CaféLuxe Screenshot](static/images/logo.png)
+![Moka Cafe Screenshot](app/static/images/logo.png)
 
 ## 🌟 Features
 
@@ -159,4 +159,4 @@ For any questions or feedback, please contact us at [your.email@example.com](mai
 
 Made with ❤️ and ☕
 
-© 2023 CaféLuxe. All rights reserved.
+© 2024 Moka Cafe. All rights reserved.
