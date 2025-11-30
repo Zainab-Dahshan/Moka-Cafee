@@ -178,13 +178,6 @@ body {
     vertical-align: middle;
 }
 
-.logo-img {
-    max-width: 150px;  /* الحجم الأقصى للوجو */
-    height: auto;       /* يحافظ على نسبة الارتفاع */
-    display: block;
-    margin: 0 auto;     /* يوضع في المنتصف إذا احتاج */
-}
-
 .logo {
     height: 40px;  /* Adjust as needed */
     width: auto;
