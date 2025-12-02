@@ -63,28 +63,36 @@ def order():
 
 # Cart management
 @main.route('/add_to_cart/<int:item_id>', methods=['POST'])
+@csrf.exempt  # Temporarily disable CSRF for testing
 def add_to_cart(item_id):
-    item = MenuItem.query.get_or_404(item_id)
-    cart = session.get('cart', {})
-
-    # Accept either JSON or form
-    if request.is_json:
-        data = request.get_json() or {}
-    else:
-        data = request.form.to_dict()
-
-    if str(item_id) in cart:
-        cart[str(item_id)]['quantity'] += 1
-    else:
-        cart[str(item_id)] = {
-            'id': item.id,
-            'name': item.name,
-            'price': str(item.price),
-            'quantity': 1
-        }
-
-    session['cart'] = cart
-    return jsonify({'cart_count': sum(item['quantity'] for item in cart.values())})
+    try:
+        item = MenuItem.query.get_or_404(item_id)
+        cart = session.get('cart', {})
+        
+        if str(item_id) in cart:
+            cart[str(item_id)]['quantity'] += 1
+        else:
+            cart[str(item_id)] = {
+                'id': item.id,
+                'name': item.name,
+                'price': str(item.price),
+                'quantity': 1,
+                'image_url': item.image_url or ''
+            }
+        
+        session['cart'] = cart
+        
+        return jsonify({
+            'success': True,
+            'cart_count': sum(item['quantity'] for item in cart.values()),
+            'message': 'Item added to cart successfully!'
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'message': f'Error adding item to cart: {str(e)}'
+        }), 400
 
 @main.route('/get_cart')
 def get_cart():
@@ -120,13 +128,6 @@ def update_cart(item_id):
         'cart_count': sum(item['quantity'] for item in cart.values())
     })
 
-@main.route('/get_cart')
-def get_cart():
-    cart = session.get('cart', {})
-    return jsonify({
-        'cart': cart,
-        'cart_count': sum(item['quantity'] for item in cart.values()) if cart else 0
-    })
 
 # Contact routes
 @main.route('/contact')

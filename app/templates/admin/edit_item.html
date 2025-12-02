@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Menu Item - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Edit Menu Item</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data" class="mb-4">
+                {{ form.hidden_tag() }}
+                
+                <div class="mb-3">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">{{ form.name.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-control", rows=3) }}
+                    {% if form.description.errors %}
+                        <div class="text-danger">{{ form.description.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.price.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.price(class="form-control") }}
+                        </div>
+                        {% if form.price.errors %}
+                            <div class="text-danger">{{ form.price.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        {{ form.category.label(class="form-label") }}
+                        {{ form.category(class="form-select") }}
+                        {% if form.category.errors %}
+                            <div class="text-danger">{{ form.category.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.image.label(class="form-label") }}
+                    {{ form.image(class="form-control") }}
+                    {% if form.image.errors %}
+                        <div class="text-danger">{{ form.image.errors[0] }}</div>
+                    {% endif %}
+                    {% if item.image_url %}
+                        <div class="mt-2">
+                            <img src="{{ url_for('static', filename=item.image_url) }}" 
+                                 alt="{{ item.name }}" 
+                                 class="img-thumbnail menu-item-image">
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-check mb-3">
+                    {{ form.is_available(class="form-check-input") }}
+                    {{ form.is_available.label(class="form-check-label") }}
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">Update Item</button>
+                    <a href="{{ url_for('admin.manage_items') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

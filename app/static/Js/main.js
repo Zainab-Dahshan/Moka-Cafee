@@ -6,11 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const itemId = this.getAttribute('data-id');
 
+            // Get CSRF token from meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
             fetch('/add_to_cart/' + itemId, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify({})
             })
             .then(response => response.json())
