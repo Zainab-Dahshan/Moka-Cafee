@@ -1,10 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
+csrf = CSRFProtect()
 
 def create_app():
     static_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'static'))
@@ -19,6 +21,11 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     login_manager.login_view = 'admin.login'
+    csrf.init_app(app)
+
+    # Make csrf_token available in templates
+    from flask_wtf.csrf import generate_csrf
+    app.jinja_env.globals['csrf_token'] = generate_csrf
 
     # Ensure upload folder exists
     os.makedirs(os.path.join(app.root_path, app.config['UPLOAD_FOLDER']), exist_ok=True)
@@ -67,6 +74,30 @@ def create_sample_data():
                 is_available=True
             ),
             MenuItem(
+                name='Latte',
+                description='Smooth espresso with steamed milk and a light layer of foam.',
+                price=32.0,
+                category='Coffee',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Americano',
+                description='Espresso diluted with hot water for a milder coffee experience.',
+                price=28.0,
+                category='Coffee',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Mocha',
+                description='Rich espresso with chocolate syrup and steamed milk.',
+                price=35.0,
+                category='Coffee',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
                 name='Green Tea',
                 description='Light and refreshing green tea.',
                 price=20.0,
@@ -75,10 +106,74 @@ def create_sample_data():
                 is_available=True
             ),
             MenuItem(
+                name='Black Tea',
+                description='Classic black tea with robust flavor.',
+                price=18.0,
+                category='Tea',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Herbal Tea',
+                description='Caffeine-free herbal infusion with natural flavors.',
+                price=22.0,
+                category='Tea',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Iced Coffee',
+                description='Chilled coffee served over ice with optional milk.',
+                price=26.0,
+                category='Coffee',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
                 name='Chocolate Cake',
                 description='Rich chocolate cake.',
                 price=35.0,
                 category='Dessert',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Cheesecake',
+                description='Creamy cheesecake with graham cracker crust.',
+                price=38.0,
+                category='Dessert',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Croissant',
+                description='Buttery, flaky French pastry.',
+                price=15.0,
+                category='Dessert',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Muffin',
+                description='Fresh baked muffin with blueberries.',
+                price=18.0,
+                category='Dessert',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Sandwich',
+                description='Grilled chicken sandwich with fresh vegetables.',
+                price=42.0,
+                category='Food',
+                image_url=None,
+                is_available=True
+            ),
+            MenuItem(
+                name='Salad',
+                description='Fresh garden salad with mixed greens and vinaigrette.',
+                price=28.0,
+                category='Food',
                 image_url=None,
                 is_available=True
             )

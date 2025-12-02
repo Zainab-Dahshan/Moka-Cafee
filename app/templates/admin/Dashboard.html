@@ -192,6 +192,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form method="POST" action="{{ url_for('admin.update_order_status', order_id=order.id) }}" class="me-auto">
+                                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                                         <div class="input-group">
                                                             <select name="status" class="form-select" aria-label="Select new status">
                                                                 <option value="pending" {{ 'selected' if order.status == 'pending' else '' }}>Pending</option>

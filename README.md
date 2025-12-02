@@ -25,8 +25,8 @@ A comprehensive web application for Moka Cafe, a modern coffee shop that offers 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/cafeluxe.git
-   cd cafeluxe
+   git clone https://github.com/yourusername/Moka-Cafe.git
+   cd Moka-Cafe
    ```
 
 2. **Create and activate a virtual environment**
