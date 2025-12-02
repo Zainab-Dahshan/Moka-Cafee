@@ -1,79 +1,57 @@
-// Main JS File – Moka-Cafe
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart');
+    const cartCount = document.getElementById('cart-count');
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Main.js Loaded Successfully");
+    addToCartButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-id');
 
-    // Mobile Menu Toggle
-    const toggleBtn = document.querySelector('.menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
+            fetch('/add_to_cart/' + itemId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                cartCount.textContent = data.cart_count;
 
-    if (toggleBtn && navMenu) {
-        toggleBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+                // Show success toast
+                const toastEl = document.getElementById('addedToCartToast');
+                if (toastEl) {
+                    new bootstrap.Toast(toastEl).show();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('هناك مشكلة في إضافة العنصر للأوردر. حاول مرة أخرى.');
+            });
         });
-    }
-
-    // Toast Auto-Hide Fix
-    const toasts = document.querySelectorAll('.toast');
-    toasts.forEach(toast => {
-        if (bootstrap) {
-            new bootstrap.Toast(toast);
-        }
     });
 
-    console.log("Admin JS loaded");
-
-    // لو الصفحة بتاعة الأوردر مفتوحة، اعرض البيانات
-    renderOrder();
+    // If order page, render cart items from session via API or backend
+    renderOrderFromBackend();
 });
 
-// =============================
-// CART SYSTEM (Front-end only)
-// =============================
-let order = JSON.parse(localStorage.getItem("cart")) || [];
-let total = JSON.parse(localStorage.getItem("total")) || 0;
-
-// Add item to cart
-function addToOrder(itemName, price) {
-    order.push({ name: itemName, price: price });
-    total += price;
-
-    saveCart();
-    renderOrder();
-
-    alert("تمت الإضافة للأوردر");
-}
-
-// Display items in order page
-function renderOrder() {
+// Optional: Render order page (this needs backend integration)
+function renderOrderFromBackend() {
     const orderList = document.getElementById('orderItems');
     const totalPrice = document.getElementById('totalPrice');
 
     if (!orderList || !totalPrice) return;
 
-    orderList.innerHTML = '';
-
-    order.forEach((item) => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - ${item.price} جنيه`;
-        orderList.appendChild(li);
-    });
-
-    totalPrice.textContent = total;
-}
-
-// Save current cart
-function saveCart() {
-    localStorage.setItem("cart", JSON.stringify(order));
-    localStorage.setItem("total", JSON.stringify(total));
-}
-
-// Finish order
-function finishOrder() {
-    alert(`تم إرسال الطلب! الإجمالي: ${total} جنيه`);
-
-    order = [];
-    total = 0;
-    saveCart();
-    renderOrder();
+    fetch('/get_cart') // You'll need to create this endpoint in your backend
+        .then(res => res.json())
+        .then(cart => {
+            orderList.innerHTML = '';
+            let total = 0;
+            Object.values(cart).forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - ${item.price} جنيه × ${item.quantity}`;
+                orderList.appendChild(li);
+                total += parseFloat(item.price) * item.quantity;
+            });
+            totalPrice.textContent = total;
+        });
 }

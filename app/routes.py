@@ -66,12 +66,12 @@ def order():
 def add_to_cart(item_id):
     item = MenuItem.query.get_or_404(item_id)
     cart = session.get('cart', {})
-    
-    # لو جاي JSON body
-    try:
-        data = request.get_json()
-    except:
-        data = {}
+
+    # Accept either JSON or form
+    if request.is_json:
+        data = request.get_json() or {}
+    else:
+        data = request.form.to_dict()
 
     if str(item_id) in cart:
         cart[str(item_id)]['quantity'] += 1
@@ -82,9 +82,26 @@ def add_to_cart(item_id):
             'price': str(item.price),
             'quantity': 1
         }
-    
+
     session['cart'] = cart
     return jsonify({'cart_count': sum(item['quantity'] for item in cart.values())})
+
+@main.route('/get_cart')
+def get_cart():
+    cart = session.get('cart', {})
+    # Get the full menu item details for each item in the cart
+    cart_with_details = {}
+    for item_id, item in cart.items():
+        menu_item = MenuItem.query.get(item_id)
+        if menu_item:
+            cart_with_details[item_id] = {
+                'id': menu_item.id,
+                'name': menu_item.name,
+                'price': str(menu_item.price),
+                'quantity': item.get('quantity', 1),
+                'image_url': menu_item.image_url
+            }
+    return jsonify(cart_with_details)
 
 @main.route('/update_cart/<int:item_id>', methods=['POST'])
 def update_cart(item_id):
@@ -101,6 +118,14 @@ def update_cart(item_id):
     return jsonify({
         'success': True,
         'cart_count': sum(item['quantity'] for item in cart.values())
+    })
+
+@main.route('/get_cart')
+def get_cart():
+    cart = session.get('cart', {})
+    return jsonify({
+        'cart': cart,
+        'cart_count': sum(item['quantity'] for item in cart.values()) if cart else 0
     })
 
 # Contact routes
@@ -270,10 +295,17 @@ def update_order_status(order_id):
     order = CustomerOrder.query.get_or_404(order_id)
     new_status = request.form.get('status')
 
-    if new_status in ['pending', 'processing', 'completed', 'cancelled']:
+    status_messages = {
+        'pending': f'Order #{order_id} is now pending and will be processed soon.',
+        'processing': f'Order #{order_id} is now being prepared.',
+        'completed': f'Order #{order_id} has been completed successfully.',
+        'cancelled': f'Order #{order_id} has been cancelled.'
+    }
+
+    if new_status in status_messages:
         order.status = new_status
         db.session.commit()
-        flash(f'Order #{order_id} status updated to {new_status.title()}', 'success')
+        flash(status_messages[new_status], 'success')
     else:
         flash('Invalid status', 'danger')
 
