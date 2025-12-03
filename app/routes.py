@@ -38,9 +38,16 @@ def menu():
 
 @main.route('/order', methods=['GET', 'POST'])
 def order():
+    if current_user.is_authenticated:
+        # Show only pending customer orders that need attention
+        orders = CustomerOrder.query.filter_by(status='pending').order_by(CustomerOrder.created_at.desc()).all()
+        for order in orders:
+            order.parsed_items = json.loads(order.items_json)
+        return render_template('order.html', orders=orders)
+
     form = OrderForm()
     cart = session.get('cart', {})
-    
+
     if form.validate_on_submit():
         # Process the order
         order = CustomerOrder(
@@ -52,13 +59,13 @@ def order():
         )
         db.session.add(order)
         db.session.commit()
-        
+
         # Clear the cart
         session.pop('cart', None)
-        
+
         flash('Your order has been placed successfully!', 'success')
         return redirect(url_for('main.order'))
-    
+
     return render_template('order.html', form=form, cart=cart)
 
 # Cart management
