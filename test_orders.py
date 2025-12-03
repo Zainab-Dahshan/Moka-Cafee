@@ -63,19 +63,32 @@ def test_basic_functionality():
 
 def test_route_logic():
     """Test the route logic specifically"""
-    with app.test_request_context():
-        from flask_login import current_user
-        from app.routes import order
-
-        # Simulate unauthenticated user
-        current_user.is_authenticated = False
-        # This would normally show the order form
-
-        # Simulate authenticated user
-        current_user.is_authenticated = True
-        # This would show orders
-
-        print("✓ Route logic handles authenticated vs unauthenticated users")
+    with app.test_client() as client:
+        # Test unauthenticated user - should show order form
+        response = client.get('/order')
+        assert response.status_code == 200
+        # Verify we're showing the order form (check for a form element or button)
+        assert b'Place Order' in response.data or b'form' in response.data.lower()
+        
+        # Test authenticated admin user - should show orders list
+        with client.session_transaction() as sess:
+            sess['_user_id'] = '1'  # Assuming admin user ID is 1
+            sess['_fresh'] = True
+        
+        response = client.get('/order')
+        assert response.status_code == 200
+        # Verify we're showing the admin view (check for admin-specific elements)
+        assert b'Orders List' in response.data or b'admin' in response.data.lower()
+        
+        # Test authenticated non-admin user - should be redirected or show appropriate view
+        with client.session_transaction() as sess:
+            sess['_user_id'] = '2'  # Assuming regular user ID is 2
+            sess['_fresh'] = True
+            
+        response = client.get('/order')
+        assert response.status_code == 200  # or 302 if redirecting
+        
+    print("✓ Route logic handles different user types correctly")
 
 if __name__ == '__main__':
     test_basic_functionality()
