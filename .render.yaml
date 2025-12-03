@@ -1,7 +1,7 @@
 services:
   - type: web
     name: moka-cafee
-    env: python
+    runtime: python
     plan: free
     region: oregon
     branch: main
